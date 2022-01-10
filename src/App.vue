@@ -12,4 +12,7 @@ export default {
 
 <style>
 @import url('./styles/init.css');
+#app{
+  height: 100%;
+}
 </style>
