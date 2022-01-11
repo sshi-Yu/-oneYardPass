@@ -17,3 +17,8 @@
     width: 280px;
     margin: 0 auto;
 }
+.to-registView{
+    font-size: 12px;
+    float: right;
+    margin-right: 15px;
+}

@@ -22,10 +22,11 @@
         />
         <div style="margin: 16px">
           <van-button round block type="info" native-type="submit"
-            >提交</van-button
+            >登录</van-button
           >
         </div>
       </van-form>
+      <router-link to="/regist" class="to-registView">去 注册</router-link>
     </div>
   </div>
 </template>
@@ -36,10 +37,9 @@ import 'vant/lib/button/style';
 import 'vant/lib/form/style';
 import 'vant/lib/field/style';
 import 'vant/lib/toast/style';
-import Request from '@/utils/Request.js'
 
 export default {
-  name: "Login",
+  name: "M-Login",
   components: {
     [Form.name]: Form,
     [Field.name]: Field,
@@ -53,28 +53,22 @@ export default {
     };
   },
   methods: {
-    onSubmit: async function(values) {
+    onSubmit: async function(userInfo) {
       // 加载中 提示效果
       Toast.loading({
         message: '登陆中',
         forbidClick: true
       })
-      const config = {
-        method: 'POST',
-        url: '/sys/login',
-        data: values
-      }
-      const res = await Request(config)
-      const { code, message, data, token } = res;
-      if(code === 1){
+      const responseCode = await this.$store.dispatch('user/login', userInfo);
+      if(responseCode == 1){
         Toast.success('登陆成功')
-      }else if(code === 500){
+      }else if(responseCode == 500){
         Toast.fail('账号格式有误')
-      }else if(code === 40100){
+      }else if(responseCode == 40100){
         Toast.fail('用户不存在，请先注册')
-      }else if(code === 40101){
+      }else if(responseCode == 40101){
         Toast.fail('账号密码不匹配')
-      }else if(code === 40110){
+      }else if(responseCode == 40110){
         Toast.fail('账号已停用')
       }else{
         Toast('出错了，请稍后再试')
@@ -85,5 +79,5 @@ export default {
 </script>
 
 <style scoped>
-@import url("../../styles/login.css");
+@import url("../../styles/m-login.css");
 </style>
