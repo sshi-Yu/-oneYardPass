@@ -26,17 +26,21 @@
           >
         </div>
       </van-form>
-      <router-link to="/regist" class="to-registView">去 注册</router-link>
+      <router-link
+        :to="$store.getters.equipment + '-regist'"
+        class="to-registView"
+        >去 注册</router-link
+      >
     </div>
   </div>
 </template>
 
 <script>
-import { Form, Field, Button, Toast  } from "vant";
-import 'vant/lib/button/style';
-import 'vant/lib/form/style';
-import 'vant/lib/field/style';
-import 'vant/lib/toast/style';
+import { Form, Field, Button, Toast } from "vant";
+import "vant/lib/button/style";
+import "vant/lib/form/style";
+import "vant/lib/field/style";
+import "vant/lib/toast/style";
 
 export default {
   name: "M-Login",
@@ -53,25 +57,25 @@ export default {
     };
   },
   methods: {
-    onSubmit: async function(userInfo) {
+    onSubmit: async function (userInfo) {
       // 加载中 提示效果
       Toast.loading({
-        message: '登陆中',
-        forbidClick: true
-      })
-      const responseCode = await this.$store.dispatch('user/login', userInfo);
-      if(responseCode == 1){
-        Toast.success('登陆成功')
-      }else if(responseCode == 500){
-        Toast.fail('账号格式有误')
-      }else if(responseCode == 40100){
-        Toast.fail('用户不存在，请先注册')
-      }else if(responseCode == 40101){
-        Toast.fail('账号密码不匹配')
-      }else if(responseCode == 40110){
-        Toast.fail('账号已停用')
-      }else{
-        Toast('出错了，请稍后再试')
+        message: "登陆中",
+        forbidClick: true,
+      });
+      const responseCode = await this.$store.dispatch("user/login", userInfo);
+      if (responseCode == 1) {
+        Toast.success("登陆成功");
+      } else if (responseCode == 500) {
+        Toast.fail("账号格式有误");
+      } else if (responseCode == 40100) {
+        Toast.fail("用户不存在，请先注册");
+      } else if (responseCode == 40101) {
+        Toast.fail("账号密码不匹配");
+      } else if (responseCode == 40110) {
+        Toast.fail("账号已停用");
+      } else {
+        Toast("出错了，请稍后再试");
       }
     },
   },

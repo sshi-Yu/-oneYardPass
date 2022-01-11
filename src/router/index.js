@@ -5,15 +5,32 @@ Vue.use(Router);
 
 const router = new Router({
     mode: 'hash',
-    routes: [{
-        name: 'login',
-        component: () => import('@/pages/Login/m-login'),
-        path: '/m-login'
-    }],
+    routes: [
+        {
+            name: 'm-login',
+            component: () => import('@/pages/Login/m-login'),
+            path: '/m-login',
+        },
+        {
+            name: 'pc-login',
+            component: () => import('@/pages/Login/pc-login'),
+            path: '/pc-login'
+        },
+        {
+            name: 'm-regist',
+            component: () => import('@/pages/Regist/m-regist'),
+            path: '/m-regist'
+        },
+        {
+            name: 'pc-regist',
+            component: () => import('@/pages/Regist/pc-regist'),
+            path: '/pc-regist'
+        },
+    ],
 
 })
 
-router.beforeEach((to, from, next) => {
+/* router.beforeEach((to, from, next) => {
     console.log(to,from)
     if (/m-/.test(from.path)) {
         next({
@@ -22,5 +39,5 @@ router.beforeEach((to, from, next) => {
         })
     }
 })
-
+ */
 export default router;

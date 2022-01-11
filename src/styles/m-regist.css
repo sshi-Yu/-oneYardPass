@@ -1,0 +1,15 @@
+#regist{
+    width: 100%;
+    height: 100%;
+    background-color: #f7f8fa;
+    overflow: hidden;
+}
+.regist-form{
+    width: 280px;
+    margin: 60px auto;
+}
+.to-loginView{
+    font-size: 12px;
+    float: right;
+    margin-right: 15px;
+}
