@@ -1,0 +1,10 @@
+#m-amin{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.main-con{
+    flex: 1;
+    height: 100%;
+}

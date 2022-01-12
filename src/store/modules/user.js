@@ -3,7 +3,8 @@ import {
     setToken
 } from "@/utils/auth";
 import {
-    login
+    login,
+    regist
 } from '@/api/user';
 
 const state = {
@@ -14,7 +15,9 @@ const state = {
 }
 
 const actions = {
-    login({ commit }, data) {
+    login({
+        commit
+    }, data) {
         return new Promise((resolve, reject) => {
             login(data)
                 .then(response => {
@@ -30,6 +33,17 @@ const actions = {
                 .catch(error => {
                     reject(error)
                 })
+        })
+    },
+    regist(_, data) {
+        return new Promise((resolve, reject) => {
+            console.log(data)
+            regist(data)
+                .then(response => {
+                    console.log(response)
+                    resolve(response.code)
+                })
+                .catch(error => reject(error))
         })
     }
 }

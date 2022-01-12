@@ -7,3 +7,11 @@ export function login(data){
         data
     })
 }
+
+export function regist(data){
+    return Request({
+        method: 'post',
+        url: '/sys/register',
+        data
+    })
+}

@@ -27,13 +27,20 @@
         />
         <van-field
           v-model="msgCode"
+          name="msgCode"
           center
           clearable
           label="短信验证码"
           placeholder="请输入短信验证码"
         >
           <template #button>
-            <van-button size="mini" type="primary">{{buttonNoticeMsg}}</van-button>
+            <van-button
+              size="mini"
+              type="primary"
+              @click.prevent="toSendCode"
+              ref="sendCodeBtn"
+              >{{ buttonNoticeMsg }}</van-button
+            >
           </template>
         </van-field>
         <div style="margin: 16px">
@@ -58,6 +65,8 @@ import "vant/lib/form/style";
 import "vant/lib/field/style";
 import "vant/lib/toast/style";
 
+import { phoneVCode } from "@/api/utils";
+
 export default {
   name: "M-Regist",
   components: {
@@ -71,13 +80,52 @@ export default {
       userAccount: "",
       password: "",
       verifyPassword: "",
-      msgCode: '',
-      buttonNoticeMsg: '发送验证码',
+      msgCode: "",
+      buttonNoticeMsg: "发送验证码",
     };
   },
   methods: {
-    onSubmit(values) {
-      console.log("submit", values);
+    async onSubmit(values) { // 提交注册
+    console.log(values)
+      const config = {
+        userAccount: values.userAccount,
+        userPassword: values.verifyPassword,
+        code: values.msgCode
+      };
+      const resCode = await this.$store.dispatch("user/regist", config);
+      if (resCode == 1) {
+        // 注册成功
+        Toast("注册成功");
+        this.$router.replace(`${this.$store.getters.equipment}-regist`);
+      } else if (resCode == 40120) {
+        // 重复注册
+        Toast.fail("该账号已注册，请勿重复注册");
+      }else if(resCode == 10100){
+        Toast.fail('验证码无效')
+      } else {
+        Toast()
+      }
+    },
+    async toSendCode() { // 发送验证码
+      const res = await phoneVCode({
+        phone: this.userAccount
+      });
+      if (res.code == 1) { // code == 1 验证码发送成功
+        let countDown = 60;
+        let timer = setInterval(() => {
+          // 设置倒计时
+          if (countDown >= 0) {
+            this.$refs.sendCodeBtn.setAttribute("disabled", true); // 倒计时未结束不可再次点击
+            this.buttonNoticeMsg = countDown--;
+          } else {
+            clearInterval(timer); // 清除定时器
+            this.buttonNoticeMsg = "重新发送验证码";
+            this.$refs.sendCodeBtn.removeAttribute("disabled"); // 倒计时结束可重新点击发送验证码
+          }
+        }, 1000);
+      } else if(res.code == 40120){
+        Toast.fail('手机号码格式错误')
+      } 
     },
   },
 };

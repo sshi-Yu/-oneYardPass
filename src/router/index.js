@@ -26,6 +26,18 @@ const router = new Router({
             component: () => import('@/pages/Regist/pc-regist'),
             path: '/pc-regist'
         },
+        {
+            name: 'm-main',
+            component: () => import('@/pages/Main/m-main'),
+            path: '/m-main',
+            children: [
+                {
+                    component: () => import('@/pages/Subscribe/m-subscribe'),
+                    path: 'm-subscribe'
+                }
+            ]
+        },
+        
     ],
 
 })
