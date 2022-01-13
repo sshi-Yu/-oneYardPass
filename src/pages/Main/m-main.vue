@@ -14,7 +14,7 @@ import Footer from '@/components/Footer'
 
 export default {
     name: 'M-Main',
-    components: { Header, Footer }
+    components: { Header, Footer },
 }
 </script>
 

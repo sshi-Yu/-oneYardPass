@@ -66,6 +66,9 @@ export default {
       const responseCode = await this.$store.dispatch("user/login", userInfo);
       if (responseCode == 1) {
         Toast.success("登陆成功");
+        setTimeout(()=>{ // 登陆成功 跳转主页
+          this.$router.replace(`/${this.$store.getters.equipment}-main/${this.$store.getters.equipment}-subscribe`)
+        })
       } else if (responseCode == 500) {
         Toast.fail("账号格式有误");
       } else if (responseCode == 40100) {

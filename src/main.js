@@ -9,5 +9,9 @@ new Vue({
   router,
   store,
   render: h => h(App),
+  created(){
+    // 安装事件总线
+    Vue.prototype.$bus = this
+  }
 }).$mount('#app')
   
