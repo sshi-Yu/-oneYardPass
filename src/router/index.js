@@ -34,6 +34,10 @@ const router = new Router({
                 {
                     component: () => import('@/pages/Subscribe/m-subscribe'),
                     path: 'm-subscribe'
+                },
+                {
+                    component: () => import('@/pages/Detail/m-detail'),
+                    path: 'm-detail'
                 }
             ]
         },

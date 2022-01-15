@@ -25,13 +25,21 @@
         readonly
         label="起始地"
         placeholder="请选择起始地"
-        @click="transboundaryType ? startAddIsShow = true : Toast('请先选择跨境类型')" 
+        @click="
+          transboundaryType
+            ? (startAddIsShow = true)
+            : Toast('请先选择跨境类型')
+        "
       /><!-- 要求先选择跨境类型后才可选择起始和目的地 否则弹窗提示用户 -->
       <van-popup v-model="startAddIsShow" round position="bottom">
         <van-cascader
           v-model="startAdd"
           title="请选择起始地"
-          :options="transboundaryType === '入境' ? options : [{text: '中国', value: '10000'}] "
+          :options="
+            transboundaryType === '入境'
+              ? options
+              : [{ text: '中国', value: '10000' }]
+          "
           @close="startAddIsShow = false"
           @finish="startAddOnFinish"
         /><!-- 根据跨境类型提供可选起始地列表 入境则默认起始地为中国 -->
@@ -44,31 +52,44 @@
         readonly
         label="目的地"
         placeholder="请选择目的地"
-        @click="transboundaryType ? endAddIsShow = true : Toast('请先选择跨境类型')"
+        @click="
+          transboundaryType ? (endAddIsShow = true) : Toast('请先选择跨境类型')
+        "
       /><!-- 要求先选择跨境类型后才可选择起始和目的地 否则弹窗提示用户 -->
       <van-popup v-model="endAddIsShow" round position="bottom">
         <van-cascader
           v-model="cascaderValue"
           title="请选择目的地"
-          :options="transboundaryType === '入境' ? [{text: '中国', value: '10000'}] : options "
+          :options="
+            transboundaryType === '入境'
+              ? [{ text: '中国', value: '10000' }]
+              : options
+          "
           @close="endAddIsShow = false"
           @finish="endAddOnFinish"
         /><!-- 根据跨境类型提供可选目的地列表 入境则默认目的地为中国 -->
       </van-popup>
     </div>
     <div class="next-pages">
-      <router-link :to="`/${this.$store.getters.equipment}-main/${this.$store.getters.equipment}-subscribe/detail`">下一步</router-link>
+      <van-button
+        color="linear-gradient(to right, #1989fa, rgb(116,203,230))"
+        size="mini"
+        @click.native="toDetail"
+      >
+        下一步
+      </van-button>
     </div>
   </div>
 </template>
 
 <script>
-import { Cascader, Field, Popup, Picker, Toast } from "vant";
+import { Cascader, Field, Popup, Picker, Toast, Button } from "vant";
 import "vant/lib/cascader/style";
 import "vant/lib/field/style";
 import "vant/lib/popup/style";
 import "vant/lib/picker/style";
 import "vant/lib/toast/style";
+import "vant/lib/button/style";
 
 export default {
   name: "M-Subscribe",
@@ -92,9 +113,9 @@ export default {
           // children: [{ text: '杭州市', value: '330100' }],
         },
       ],
-      transboundaryType: '', // 1-入境  2-出境
+      transboundaryType: "", // 1-入境  2-出境
       showPicker: false,
-      columns: [ '入境', '出境' ]
+      columns: ["入境", "出境"],
     };
   },
   components: {
@@ -103,20 +124,43 @@ export default {
     [Popup.name]: Popup,
     [Picker.name]: Picker,
     [Toast.name]: Toast,
+    [Button.name]: Button,
   },
   methods: {
     // 全部选项选择完毕后，会触发 finish 事件
-    startAddOnFinish({ selectedOptions }) { // 起始地选择完成
+    startAddOnFinish({ selectedOptions }) {
+      // 起始地选择完成
       this.startAddIsShow = false;
       this.startAdd = selectedOptions.map((option) => option.text).join("/");
+      this.$store.commit(
+        "subscribe/SET_startAdd",
+        selectedOptions.map((option) => option.text).join("/")
+      );
     },
-    endAddOnFinish({ selectedOptions }) { // 目的地选择完成
+    endAddOnFinish({ selectedOptions }) {
+      // 目的地选择完成
       this.endAddIsShow = false;
       this.endAdd = selectedOptions.map((option) => option.text).join("/");
+      this.$store.commit(
+        "subscribe/SET_endAdd",
+        selectedOptions.map((option) => option.text).join("/")
+      );
     },
-    onConfirm(value) { // 出入境类型选择完毕
+    onConfirm(value) {
+      // 出入境类型选择完毕
       this.transboundaryType = value;
+      this.$store.commit("subscribe/SET_transboundaryType", value);
       this.showPicker = false;
+    },
+    toDetail() {
+      if (this.transboundaryType && this.startAdd && this.endAdd) {
+        // 用户信息填写完整后可跳转下一页
+        this.$router.push({
+          path: `/${this.$store.getters.equipment}-main/${this.$store.getters.equipment}-detail`,
+        });
+      } else {
+        Toast("请填写完整");
+      }
     },
   },
   mounted() {
