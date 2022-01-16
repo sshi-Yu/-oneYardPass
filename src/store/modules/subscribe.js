@@ -1,5 +1,6 @@
 import {
-    getSelectablePortsList
+    getSelectablePortsList,
+    submit_subscribeForm
 } from "@/api/port";
 
 const state = {
@@ -24,6 +25,19 @@ const actions = {
                 .then(response => {
                     if (response.code === 1111) { // code === xxxx 成功获取口岸列表
                         resolve(response.data) // 返回列表数据
+                    }
+                })
+                .catch(error => reject(error))
+        })
+    },
+    submitSubscribeForm({
+        state
+    }) {
+        return new Promise((resolve, reject) => {
+            submit_subscribeForm(state.subscribe.getters.subscribeForm)
+                .then(response => {
+                    if (response.code === 1111) { // code === xxxx 预约成功
+                        resolve(response.data)
                     }
                 })
                 .catch(error => reject(error))

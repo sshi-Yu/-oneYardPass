@@ -60,6 +60,9 @@
         placeholder="请输入货物重量"
       />
     </van-cell-group>
+    <van-divider content-position="left" style="fontsize: 12px"
+      >请选择通关时间段</van-divider
+    >
     <van-cell-group>
       <van-field
         label="起始时间"
@@ -85,26 +88,39 @@
         @click="showDateChoose2 = true"
         placeholder="请选择最迟通关时间"
       />
-      <van-datetime-picker
-        @confirm="setStartTime2"
-        type="datehour"
-        title="请选择最迟通关时间"
-        :min-date="minDate"
-        :max-date="maxDate"
-        v-show="showDateChoose2"
-      />
     </van-cell-group>
+    <div class="submit_subscribe">
+      <van-button
+        plain
+        hairline
+        type="info"
+        size="small"
+        @click="submit_subscribeForm"
+        >提交预约</van-button
+      >
+    </div>
   </div>
 </template>
 
 <script>
-import { Picker, Toast, Popup, Field, CellGroup, DatetimePicker } from "vant";
+import {
+  Picker,
+  Toast,
+  Popup,
+  Field,
+  CellGroup,
+  DatetimePicker,
+  Divider,
+  Button,
+} from "vant";
 import "vant/lib/picker/style";
 import "vant/lib/toast/style";
 import "vant/lib/popup/style";
 import "vant/lib/field/style";
 import "vant/lib/cell-group/style";
 import "vant/lib/datetime-picker/style";
+import "vant/lib/divider/style";
+import "vant/lib/button/style";
 
 import moment from "moment";
 
@@ -131,10 +147,12 @@ export default {
       currentDate: new Date(),
       showDateChoose1: false,
       showDateChoose2: false,
+      subFormIsFillIn: false,// 指示预约表单是否填写完整 完整置true
     };
   },
   watch: {
     subscribeForm: {
+      // 对预约列表进行监视 当数据发生变化时 同步至vuex中
       deep: true,
       handler: function (newV) {
         const keys = Object.keys(newV);
@@ -151,6 +169,19 @@ export default {
     onConfirm(value) {
       this.value = value;
       this.showPicker = false;
+    },
+    async submit_subscribeForm() {
+      Object.keys(this.$store.state.subscribeForm).forEach((i) => {
+        if (!this.$store.state.subscribeForm[i]) {
+          this.subFormIsFillIn = false; // 当预约表单中存在未填写完整的信息时 不可提交
+        }
+      });
+      if(this.subFormIsFillIn){
+        const subscribeRes = await this.$store.dispatch('subscribe/submitSubscribeForm')
+        if(subscribeRes == 1111){ // 根据返回信息判断是否提交预约成功
+          console.log(subscribeRes)
+        }
+      }
     },
     async getPortsList() {
       this.loading = true;
@@ -171,12 +202,12 @@ export default {
       }
     },
     setStartTime1(v) {
+      // 选择最早通关时间后 自动设定最迟通关时间为3小时候 即通关时间段 为3小时
       this.subscribeForm.startTime = moment(v).format("YYYY-MM-DD HH:mm:ss");
-      this.showDateChoose1 = false
-    },
-    setStartTime2(v) {
-      this.subscribeForm.endTime = moment(v).format("YYYY-MM-DD HH:mm:ss");
-      this.showDateChoose2 = false
+      this.subscribeForm.endTime = moment(v)
+        .add(3, "hours")
+        .format("YYYY-MM-DD HH:mm:ss");
+      this.showDateChoose1 = false;
     },
   },
   components: {
@@ -186,6 +217,8 @@ export default {
     [Field.name]: Field,
     [CellGroup.name]: CellGroup,
     [DatetimePicker.name]: DatetimePicker,
+    [Divider.name]: Divider,
+    [Button.name]: Button,
   },
   mounted() {
     // 修改header当前页面描述
