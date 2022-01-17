@@ -1,0 +1,42 @@
+.sub_item{
+    position: relative;
+    margin: 20px 10px;
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+.port_name{
+    font-size: 14px;
+    font-weight: 700;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #ddd;
+}
+.port_address{
+    padding: 5px 0;
+    font-size: 13px;
+}
+.submit_time{
+    padding: 5px 0;
+}
+.to_detailPage{
+    position: absolute;
+    right: 10px;
+    top: 40px;
+    width: 18px;
+    height: 18px;
+    background-color: #ccc;
+    color: #eee;
+    text-align: center;
+    padding: 2.5px;
+    border-radius: 50%;
+    line-height: 18px;
+}
+.submitInfo{
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    padding: 5px 0;
+}
+.subscribe_state{
+    padding: 5.5px 0;
+}
