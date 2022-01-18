@@ -1,6 +1,7 @@
 import {
     getSelectablePortsList,
-    submit_subscribeForm
+    submit_subscribeForm,
+    get_subscribeList
 } from "@/api/port";
 
 const state = {
@@ -21,9 +22,11 @@ const state = {
 const actions = {
     getPortsList(_, data) {
         return new Promise((resolve, reject) => {
+            console.log(data)
             getSelectablePortsList(data)
                 .then(response => {
-                    if (response.code === 1111) { // code === xxxx 成功获取口岸列表
+                    console.log(response.data)
+                    if (response.code === 1) { // code === xxxx 成功获取口岸列表
                         resolve(response.data) // 返回列表数据
                     }
                 })
@@ -41,6 +44,19 @@ const actions = {
                     }
                 })
                 .catch(error => reject(error))
+        })
+    },
+    getSubscribeList({
+        state
+    }){
+        return new Promise((resolve, reject) => {
+            get_subscribeList(state.user.userInfo.id)
+            .then(response => {
+                if(response.code === 1111) { // code === xxxx 获取成功
+                    resolve(response.data)
+                }
+            })
+            .catch(error => reject(error))
         })
     }
 }

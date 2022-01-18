@@ -167,7 +167,7 @@ export default {
   },
   methods: {
     onConfirm(value) {
-      this.value = value;
+      this.subscribeForm.portName = value;
       this.showPicker = false;
     },
     async submit_subscribeForm() {
@@ -188,11 +188,11 @@ export default {
       if (this.$store.state.subscribe.transboundaryType) {
         this.showPicker = true;
         const portsList = await this.$store.dispatch("subscribe/getPortsList", {
-          address:
-            this.$store.state.subscribe.transboundaryType === "入境"
-              ? this.$store.state.subscribe.endAdd
-              : this.$store.state.subscribe.transboundaryType === "出境"
+          startAdd:
+            this.$store.state.subscribe.transboundaryType === "2" // 2-出境
               ? this.$store.state.subscribe.startAdd
+              : this.$store.state.subscribe.transboundaryType === "1" // 1-入境
+              ? this.$store.state.subscribe.endAdd
               : "",
         });
         this.columns = portsList; // 展示 后台返回的口岸列表

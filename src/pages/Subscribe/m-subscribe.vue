@@ -149,7 +149,10 @@ export default {
     onConfirm(value) {
       // 出入境类型选择完毕
       this.transboundaryType = value;
-      this.$store.commit("subscribe/SET_transboundaryType", value);
+      this.$store.commit(
+        "subscribe/SET_transboundaryType",
+        value === "出境" ? "1" : "2" // 出境为1 入境为2
+      );
       this.showPicker = false;
     },
     toDetail() {

@@ -9,7 +9,7 @@ import { getAccessToken } from '@/utils/auth';
 
 export default {
     name: 'APP',
-    beforeCreate(){
+    /* beforeCreate(){
       if( /Android|iPhone/.test(navigator.userAgent) ){
         // 用户设备为 移动设备 
         // commit => equipment = mobile
@@ -36,7 +36,7 @@ export default {
           this.$router.replace('/pc-login') // token验证不通过 重定向到 pc-login
         }
       }
-    }
+    } */
 
 }
 </script>

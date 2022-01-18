@@ -8,7 +8,8 @@ module.exports = {
         port: '8081',
         proxy: {
             [process.env.VUE_APP_BASE_API]: {
-                target: 'http://1.12.250.180:8089',
+                // target: 'http://1.12.250.180:8089',
+                target: 'http://192.168.43.129:8080',
                 changeOrigin: true,
                 ws: true,
                 pathRewrite: {
