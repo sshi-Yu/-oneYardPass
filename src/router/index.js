@@ -41,12 +41,20 @@ const router = new Router({
                 },
                 {
                     component: () => import('@/pages/SubscribeList/m-subscribeList'),
-                    path: 'm-subscribeList'
+                    path: 'm-subscribeList',
                 },
+                {   
+                    name: 'toCheckQRcode',
+                    component: () => import('@/pages/QRcode/m-QRcode'),
+                    path: 'm-QRcode/:subscribeId/:auditStatus',
+                },
+                {
+                    name: 'm-userCenter',
+                    component: () => import('@/pages/UserCenter/m-userCenter'),
+                    path: 'm-userCenter'
+                }
             ]
         },
-        
-
     ],
 
 })

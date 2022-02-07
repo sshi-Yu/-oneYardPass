@@ -157,7 +157,7 @@ export default {
     },
     toDetail() {
       if (this.transboundaryType && this.startAdd && this.endAdd) {
-        // 用户信息填写完整后可跳转下一页
+        // 用户 信息填写完整后可跳转下一页
         this.$router.push({
           path: `/${this.$store.getters.equipment}-main/${this.$store.getters.equipment}-detail`,
         });

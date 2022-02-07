@@ -6,14 +6,20 @@
         <div class="port_address" v-if="(i.transboundaryType = '1')">
           {{ i.address }} - 中国
         </div>
-        <div class="port_address" v-else>
-          中国 - {{ i.address }}
-        </div>
+        <div class="port_address" v-else>中国 - {{ i.address }}</div>
         <div class="submitInfo">
-          <div class="submit_time">发起时间： {{i.submitTime}}</div>
-          <div class="subscribe_state">{{i.auditStatus}}</div>
+          <div class="submit_time">发起时间： {{ i.submitTime }}</div>
+          <div class="subscribe_state">{{ i.auditStatus }}</div>
         </div>
-        <div class="to_detailPage">
+        <div
+          class="to_detailPage"
+          @click="
+            toCheckQRcode({
+              subscribeId: i.subscribeId,
+              auditStatus: i.auditStatus,
+            })
+          "
+        >
           <van-icon name="arrow" />
         </div>
       </van-skeleton>
@@ -39,7 +45,7 @@ export default {
           address: "缅甸",
           submitTime: "2022-02-01 03:00:00",
           subscribeId: "1",
-          auditStatus: "1", // 
+          auditStatus: "1", //
         },
         {
           portName: "口岸1",
@@ -47,7 +53,7 @@ export default {
           address: "缅甸",
           submitTime: "2022-02-01 03:00:00",
           subscribeId: "2",
-          auditStatus: "2", // 
+          auditStatus: "2", //
         },
       ],
     };
@@ -56,6 +62,14 @@ export default {
     [Skeleton.name]: Skeleton,
     [Icon.name]: Icon,
     [Toast.name]: Toast,
+  },
+  methods: {
+    toCheckQRcode(msg) {
+      this.$router.push({
+        name: "toCheckQRcode",
+        params: msg,
+      });
+    },
   },
   mounted() {
     // 设置header提示
