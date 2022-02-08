@@ -3,7 +3,7 @@ import Request from '@/utils/Request';
 export function login(data){
     return Request({
         method: 'post',
-        url: '/sys/login',
+        url: '/user/login',
         data
     })
 }
@@ -11,7 +11,7 @@ export function login(data){
 export function regist(data){
     return Request({
         method: 'post',
-        url: '/sys/register',
+        url: '/user/regist',
         data
     })
 }

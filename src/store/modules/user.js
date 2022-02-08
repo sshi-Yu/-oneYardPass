@@ -21,8 +21,8 @@ const actions = {
         return new Promise((resolve, reject) => {
             login(data)
                 .then(response => {
-                    if (response.code === 1) { // 登录成功code=1 保存token
-                        setToken(response.token)
+                    if (response.code === '1111') { // 登录成功code=1111 保存token
+                        setToken(response.data.accessToken)
                         /* commit => set userInfo */
                         commit('SET_userInfo', response.data)
                         resolve(response.code) // 传递code 登录页面提示成功
