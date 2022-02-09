@@ -26,7 +26,7 @@ axios.interceptors.request.use(
     config => {
         const resToken = getAccessToken();
         if (resToken) {
-            config.headers['AccessToken'] = resToken;
+            config.headers['accessToken'] = resToken;
         }
         return config
     },
@@ -44,7 +44,7 @@ function Request(config) {
                 }
                 const res = response.data;
                 // 200 300 登陆成功 设置token
-                setToken(res.AccessToken)
+                // setToken(res.AccessToken)
                 resolve(res)
             })
             .catch(error => {

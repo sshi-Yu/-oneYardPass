@@ -35,11 +35,7 @@
         <van-cascader
           v-model="startAdd"
           title="请选择起始地"
-          :options="
-            transboundaryType === '入境'
-              ? options
-              : [{ text: '中国', value: '10000' }]
-          "
+          :options="options_startAddress"
           @close="startAddIsShow = false"
           @finish="startAddOnFinish"
         /><!-- 根据跨境类型提供可选起始地列表 入境则默认起始地为中国 -->
@@ -60,11 +56,7 @@
         <van-cascader
           v-model="cascaderValue"
           title="请选择目的地"
-          :options="
-            transboundaryType === '入境'
-              ? [{ text: '中国', value: '10000' }]
-              : options
-          "
+          :options="options_endAddress"
           @close="endAddIsShow = false"
           @finish="endAddOnFinish"
         /><!-- 根据跨境类型提供可选目的地列表 入境则默认目的地为中国 -->
@@ -101,8 +93,8 @@ export default {
       endAdd: "",
       cascaderValue: "",
       // 选项列表，children 代表子选项，支持多级嵌套
-      options: [
-        {
+      options_startAddress: [
+        /* {
           text: "缅甸",
           value: "11000",
           // children: [{ text: '杭州市', value: '330100' }],
@@ -111,9 +103,10 @@ export default {
           text: "老挝",
           value: "12000",
           // children: [{ text: '杭州市', value: '330100' }],
-        },
+        }, */
       ],
-      transboundaryType: "", // 1-入境  2-出境
+      options_endAddress: [],
+      transboundaryType: "", // 0-入境  1-出境
       showPicker: false,
       columns: ["入境", "出境"],
     };
@@ -136,6 +129,22 @@ export default {
         "subscribe/SET_startAdd",
         selectedOptions.map((option) => option.text).join("/")
       );
+      // 联动 选择起始地后自动匹配相应的目的地
+      this.endAdd = this.options_endAddress.filter(i => i.value === selectedOptions.map((option) => option.value).join("/"))[0].text;
+      this.$store.commit(
+        "subscribe/SET_endAdd",
+        this.options_endAddress.filter(i => i.value === selectedOptions.map((option) => option.value).join("/"))[0].text
+      );
+      // 设置vuex中目前选定目的地和起始地所对应的口岸名称
+      this.$store.commit(
+        "subscribe/SET_portName",
+        selectedOptions.map((option) => option.name).join("/")
+      );
+      // 设置vuex中目前选定目的地和起始地所对应的口岸id
+      this.$store.commit(
+        "subscribe/SET_portId",
+        selectedOptions.map((option) => option.value).join("/")
+      );
     },
     endAddOnFinish({ selectedOptions }) {
       // 目的地选择完成
@@ -145,15 +154,60 @@ export default {
         "subscribe/SET_endAdd",
         selectedOptions.map((option) => option.text).join("/")
       );
+      // 联动 选择目的地后自动匹配相应的起始地
+      this.startAdd = this.options_startAddress.filter(i => i.value === selectedOptions.map((option) => option.value).join("/"))[0].text;
+      this.$store.commit( // 同步vux中的数据
+        "subscribe/SET_startAdd",
+        this.options_startAddress.filter(i => i.value === selectedOptions.map((option) => option.value).join("/"))[0].text
+      );
+      // 设置vuex中目前选定目的地和起始地所对应的口岸名称
+      this.$store.commit(
+        "subscribe/SET_portName",
+        selectedOptions.map((option) => option.name).join("/")
+      );
+      // 设置vuex中目前选定目的地和起始地所对应的口岸id
+      this.$store.commit(
+        "subscribe/SET_portId",
+        selectedOptions.map((option) => option.value).join("/")
+      );
     },
-    onConfirm(value) {
+    async onConfirm(value) {
       // 出入境类型选择完毕
       this.transboundaryType = value;
       this.$store.commit(
         "subscribe/SET_transboundaryType",
-        value === "出境" ? "1" : "2" // 出境为1 入境为2
+        value === "出境" ? "1" : "0" // 出境为1 入境为2
       );
+      /* 获取口岸起始地与目的地选项列表 */
+      try {
+        const res = await this.$store.dispatch(
+          "subscribe/getPortAddressList"
+        );
+        if(res.code === '1111'){// 1111 成功
+          // 起始地列表
+          let s_arr = []  
+          res.data.map(i => s_arr.push({
+            text: i.start_address +'(' + i.port_name + ')',
+            value: i._id,
+            name: i.port_name
+          }))
+          this.options_startAddress = s_arr;
+          // 目的地列表
+          let e_arr = []  
+          res.data.map(i => e_arr.push({
+            text: i.end_address +'(' + i.port_name + ')',
+            value: i._id,
+            name: i.port_name
+          }))
+          this.options_endAddress = e_arr;
+        }
+      } catch (error) {
+        alert(error)
+      }
       this.showPicker = false;
+      this.startAdd = this.endAdd = '' // 重新选择出入境类型后清空起始地和目的地
+      this.$store.commit("subscribe/SET_startAdd", '')
+      this.$store.commit("subscribe/SET_endAdd", '') // 同时也清空vuex中保存的数据
     },
     toDetail() {
       if (this.transboundaryType && this.startAdd && this.endAdd) {

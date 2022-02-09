@@ -1,7 +1,8 @@
 import {
     getSelectablePortsList,
     submit_subscribeForm,
-    get_subscribeList
+    get_subscribeList,
+    getPortAddressList
 } from "@/api/port";
 
 const state = {
@@ -16,16 +17,17 @@ const state = {
     goodsType: '',
     goodsWeight: '',
     startTime: '',
-    endTime: ''
+    endTime: '',
+    portId: ''
 }
 
 const actions = {
     getPortsList(_, data) {
         return new Promise((resolve, reject) => {
-            console.log(data)
+            // console.log(data)
             getSelectablePortsList(data)
                 .then(response => {
-                    console.log(response.data)
+                    // console.log(response.data)
                     if (response.code === 1) { // code === xxxx 成功获取口岸列表
                         resolve(response.data) // 返回列表数据
                     }
@@ -34,12 +36,32 @@ const actions = {
         })
     },
     submitSubscribeForm({
-        state
+        rootGetters
     }) {
         return new Promise((resolve, reject) => {
-            submit_subscribeForm(state.subscribe.getters.subscribeForm)
+            console.log(rootGetters)
+            const {
+                subscribeForm,
+            } = rootGetters
+            const {
+                _id
+            } = rootGetters.userInfo
+            const subInfo = {
+                port_id: subscribeForm.portId,
+                case_number: subscribeForm.caseNumber,
+                proposer_id: _id,
+                driver_name: subscribeForm.ownerName,
+                phone: subscribeForm.phoneNumber,
+                begin_time: subscribeForm.startTime,
+                end_time: subscribeForm.endTime,
+                goods_weight: subscribeForm.goodsWeight,
+                goods_type: subscribeForm.goodsType,
+                transboundary_type: subscribeForm.transboundaryType,
+                license_plate: subscribeForm.licensePlate
+            }
+            submit_subscribeForm(subInfo)
                 .then(response => {
-                    if (response.code === 1111) { // code === xxxx 预约成功
+                    if (response.code === '1111') { // code === xxxx 预约成功
                         resolve(response.data)
                     }
                 })
@@ -47,16 +69,29 @@ const actions = {
         })
     },
     getSubscribeList({
-        state
-    }){
+        rootState
+    }) {
         return new Promise((resolve, reject) => {
-            get_subscribeList(state.user.userInfo.id)
-            .then(response => {
-                if(response.code === 1111) { // code === xxxx 获取成功
-                    resolve(response.data)
-                }
+            get_subscribeList(rootState.user.userInfo.id)
+                .then(response => {
+                    if (response.code === 1111) { // code === xxxx 获取成功
+                        resolve(response.data)
+                    }
+                })
+                .catch(error => reject(error))
+        })
+    },
+    getPortAddressList({
+        state
+    }) {
+        return new Promise((resolve, reject) => {
+            getPortAddressList({
+                transboundary_type: state.transboundaryType
             })
-            .catch(error => reject(error))
+                .then(response => {
+                    resolve(response)
+                })
+                .catch(error => reject(error))
         })
     }
 }
@@ -97,6 +132,9 @@ const mutations = {
     },
     SET_portName: (state, data) => {
         state.portName = data
+    },
+    SET_portId: (state, data) => {
+        state.portId = data
     },
 }
 

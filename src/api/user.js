@@ -15,3 +15,11 @@ export function regist(data){
         data
     })
 }
+
+export function refresh_userInfo(data){
+    return Request({
+        method: 'post',
+        url: '/user/refresh',
+        data
+    })
+}

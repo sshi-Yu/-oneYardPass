@@ -1,5 +1,13 @@
 import Request from '@/utils/Request'
 
+export function getPortAddressList(data){
+    return Request({
+        method: 'get',
+        url: '/port/portAddressList',
+        params: data
+    })
+}
+
 export function getSelectablePortsList(data){
     return Request({
         method: 'get',
@@ -11,7 +19,7 @@ export function getSelectablePortsList(data){
 export function submit_subscribeForm(data){
     return Request({
         method: 'post',
-        url: '/port/apply', // 提交预约表单的接口
+        url: '/subscribe/sub_subscribe', // 提交预约表单的接口
         data
     })
 }

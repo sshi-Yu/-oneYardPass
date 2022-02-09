@@ -1,6 +1,7 @@
 import Cookie from 'js-cookie'
 
 const accessTokenKey = 'At'
+const user_id = 'u_id'
 
 /**
  * 解析cookie中保持的token
@@ -12,4 +13,12 @@ export function getAccessToken(){
 
 export function setToken(at){
     Cookie.set(accessTokenKey, at)
+}
+
+export function setUserId(userId){
+    Cookie.set(user_id, userId)
+}
+
+export function getUserId(){
+    return Cookie.get(user_id)
 }

@@ -4,19 +4,10 @@
       readonly
       clickable
       label="口岸"
-      :value="subscribeForm.portName"
+      :value="$store.getters.subscribeForm.portName"
       placeholder="选择口岸"
-      @click="getPortsList"
+      unable
     />
-    <van-popup v-model="showPicker" round position="bottom">
-      <van-picker
-        show-toolbar
-        :columns="columns"
-        @cancel="showPicker = false"
-        @confirm="onConfirm"
-        :loading="loading"
-      />
-    </van-popup>
     <van-cell-group>
       <van-field
         v-model="subscribeForm.ownerName"
@@ -132,7 +123,7 @@ export default {
       columns: ["口岸1", "口岸2", "口岸3", "口岸4", "口岸5"],
       loading: true,
       subscribeForm: {
-        portName: "",
+        // portName: "",
         ownerName: "",
         phoneNumber: "",
         licensePlate: "",
@@ -141,6 +132,7 @@ export default {
         goodsWeight: "",
         startTime: "",
         endTime: "",
+        // portId: ""
       },
       minDate: new Date(2022, 1, 1),
       maxDate: new Date(2022, 11, 31),
@@ -171,34 +163,20 @@ export default {
       this.showPicker = false;
     },
     async submit_subscribeForm() {
-      Object.keys(this.$store.state.subscribeForm).forEach((i) => {
-        if (!this.$store.state.subscribeForm[i]) {
+      Object.keys(this.$store.getters.subscribeForm).forEach((i) => {
+        if (!this.$store.getters.subscribeForm[i]) {
           this.subFormIsFillIn = false; // 当预约表单中存在未填写完整的信息时 不可提交
+          Toast('请正确填写完整表单内容')
+        }else{
+          this.subFormIsFillIn = true;
         }
       });
       if(this.subFormIsFillIn){
         const subscribeRes = await this.$store.dispatch('subscribe/submitSubscribeForm')
-        if(subscribeRes == 1111){ // 根据返回信息判断是否提交预约成功
+        console.log(subscribeRes)
+        if(subscribeRes === '1111'){ // 根据返回信息判断是否提交预约成功
           console.log(subscribeRes)
         }
-      }
-    },
-    async getPortsList() {
-      this.loading = true;
-      if (this.$store.state.subscribe.transboundaryType) {
-        this.showPicker = true;
-        const portsList = await this.$store.dispatch("subscribe/getPortsList", {
-          startAdd:
-            this.$store.state.subscribe.transboundaryType === "2" // 2-出境
-              ? this.$store.state.subscribe.startAdd
-              : this.$store.state.subscribe.transboundaryType === "1" // 1-入境
-              ? this.$store.state.subscribe.endAdd
-              : "",
-        });
-        this.columns = portsList; // 展示 后台返回的口岸列表
-        this.loading = false;
-      } else {
-        Toast("请重新填写跨境起始地与目的地信息");
       }
     },
     setStartTime1(v) {

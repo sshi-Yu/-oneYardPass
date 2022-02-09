@@ -1,7 +1,7 @@
 const getters = {
     token: state => state.user.token,
     auth: state => state.user.auth,
-    userInfo: state => state.user.auth,
+    userInfo: state => state.user.userInfo,
     equipment: state => state.user.equipment === 'pc' ? 'pc' : 'm',
     subscribeForm: state => {
         let formInfo = {};
