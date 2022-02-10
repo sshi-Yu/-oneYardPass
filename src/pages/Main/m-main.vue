@@ -2,9 +2,9 @@
   <div id="m-main">
       <Header />
       <div class="main-con">
-            <keep-alive>
+            <!-- <keep-alive> -->
               <router-view></router-view>
-            </keep-alive>
+            <!-- </keep-alive> -->
       </div>
       <Footer />
   </div>

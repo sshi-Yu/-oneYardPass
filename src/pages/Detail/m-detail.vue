@@ -86,7 +86,7 @@
         hairline
         type="info"
         size="small"
-        @click="submit_subscribeForm"
+        @click.prevent="submit_subscribeForm"
         >提交预约</van-button
       >
     </div>
@@ -139,7 +139,7 @@ export default {
       currentDate: new Date(),
       showDateChoose1: false,
       showDateChoose2: false,
-      subFormIsFillIn: false,// 指示预约表单是否填写完整 完整置true
+      subFormIsFillIn: false, // 指示预约表单是否填写完整 完整置true
     };
   },
   watch: {
@@ -163,19 +163,21 @@ export default {
       this.showPicker = false;
     },
     async submit_subscribeForm() {
-      Object.keys(this.$store.getters.subscribeForm).forEach((i) => {
-        if (!this.$store.getters.subscribeForm[i]) {
-          this.subFormIsFillIn = false; // 当预约表单中存在未填写完整的信息时 不可提交
-          Toast('请正确填写完整表单内容')
-        }else{
-          this.subFormIsFillIn = true;
-        }
-      });
-      if(this.subFormIsFillIn){
-        const subscribeRes = await this.$store.dispatch('subscribe/submitSubscribeForm')
-        console.log(subscribeRes)
-        if(subscribeRes === '1111'){ // 根据返回信息判断是否提交预约成功
-          console.log(subscribeRes)
+      this.subFormIsFillIn = Object.values(this.$store.getters.subscribeForm).every((i) => i !== ""); // 表单填写完整可正常提交 为填写完整不可提交
+      if (this.subFormIsFillIn) {
+        const subscribeRes = await this.$store.dispatch(
+          "subscribe/submitSubscribeForm"
+        );
+        if (subscribeRes.code === "1111") {
+          // 根据返回信息判断是否提交预约成功
+          Toast("预约成功，请等待审核通过");
+          setTimeout(() => {
+            this.$router.replace("/m-main/m-subscribeList");
+          }, 1500);
+        } else if (subscribeRes.code === "1009") {
+          Toast("请先完善个人信息后才可预约");
+        } else {
+          alert(subscribeRes.data);
         }
       }
     },

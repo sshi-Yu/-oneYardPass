@@ -27,7 +27,15 @@ export function submit_subscribeForm(data){
 export function get_subscribeList(data){
     return Request({
         method: 'get',
-        url: '/', // 获取所有预约列表的接口
-        data
+        url: '/subscribe/subscribeList', // 获取所有预约列表的接口
+        params: data
+    })
+}
+
+export function get_subscribeInfo(data){
+    return Request({
+        method: 'get',
+        url: '/subscribe/subscribeInfo',
+        params: data
     })
 }

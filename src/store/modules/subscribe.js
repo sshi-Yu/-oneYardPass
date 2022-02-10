@@ -39,7 +39,6 @@ const actions = {
         rootGetters
     }) {
         return new Promise((resolve, reject) => {
-            console.log(rootGetters)
             const {
                 subscribeForm,
             } = rootGetters
@@ -52,8 +51,8 @@ const actions = {
                 proposer_id: _id,
                 driver_name: subscribeForm.ownerName,
                 phone: subscribeForm.phoneNumber,
-                begin_time: subscribeForm.startTime,
-                end_time: subscribeForm.endTime,
+                begin_time: new Date(subscribeForm.startTime), // 转为标准时间
+                end_time: new Date(subscribeForm.endTime), // 转为标准时间
                 goods_weight: subscribeForm.goodsWeight,
                 goods_type: subscribeForm.goodsType,
                 transboundary_type: subscribeForm.transboundaryType,
@@ -61,22 +60,20 @@ const actions = {
             }
             submit_subscribeForm(subInfo)
                 .then(response => {
-                    if (response.code === '1111') { // code === xxxx 预约成功
-                        resolve(response.data)
-                    }
+                    resolve(response)
                 })
                 .catch(error => reject(error))
         })
     },
     getSubscribeList({
-        rootState
+        rootGetters
     }) {
         return new Promise((resolve, reject) => {
-            get_subscribeList(rootState.user.userInfo.id)
+            get_subscribeList({
+                user_id: rootGetters.userInfo._id,
+            })
                 .then(response => {
-                    if (response.code === 1111) { // code === xxxx 获取成功
-                        resolve(response.data)
-                    }
+                    resolve(response)
                 })
                 .catch(error => reject(error))
         })

@@ -2,9 +2,9 @@
   <div id="m-QRcode">
     <div id="qrcode" ref="qrcode"></div>
     <div class="statusIndicator">
-        审核状态: {{$route.params.auditStatus}}
+        审核状态: {{$route.params.auditStatus | subscribe_status_filter}}
     </div>
-    <div class="mask" v-if="$route.params.auditStatus != 1">
+    <div class="mask" v-if="$route.params.auditStatus != 3">
         <div class="replay">
             <van-icon name="replay"/> 审核未通过，请稍后再试。
         </div>
@@ -14,7 +14,7 @@
 
 <script>
 import QRCode from "qrcodejs2";
-import { createQRcode } from "@/api/utils";
+import { get_subscribeInfo } from "@/api/port";
 import { Icon } from 'vant'
 import 'vant/lib/icon/style'
 
@@ -41,23 +41,31 @@ export default {
     },
     
   },
+  filters: {
+    subscribe_status_filter: function (subscribe_status) {
+      switch (subscribe_status) {
+        case "0":
+          return "预约撤回";
+        case "1":
+          return "审核中";
+        case "2":
+          return "预约失败";
+        case "3":
+          return "预约成功";
+      }
+    },
+  },
   async mounted() {
-    if (this.$route.params.auditStatus == 1) {
-      // 如果预约状态为1 即预约成功
-      // let qrmsg = await createQRcode(this.$route.params.subscribeId)// 发送预约id 获取二维码信息
-      let qrmsg = {
-        // 模拟接口数据
-        portName: "口岸1",
-        transboundaryType: "1", // 1为出境 2为入境
-        address: "缅甸",
-        submitTime: "2022-02-01 03:00:00",
-        subscribeId: "2",
-        auditStatus: "2", //
-      };
+    if (this.$route.params.auditStatus == 3) {
+      // 如果预约状态为3 即预约成功
+      let qrmsg = await get_subscribeInfo({
+        subscribe_id: this.$route.params.subscribeId,
+        user_id: this.$store.getters.userInfo._id
+      })// 发送预约id 获取二维码信息
       this.qrCode(JSON.stringify(qrmsg), QRCode);
     } else {
-      let qrmsg = '审核未通过，请稍后再试。'
-      this.qrCode(JSON.stringify(qrmsg), QRCode);
+      let default_qrmsg = '审核未通过，请等待审核结果'; // 审核未通过时 以此提示内容生产二维码
+      this.qrCode(JSON.stringify(default_qrmsg), QRCode);
     }
   },
 };

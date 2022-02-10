@@ -8,11 +8,5 @@ export function phoneVCode(data){
     })
 }
 
-export function createQRcode(data){
-    return Request({
-        method: 'post',
-        url: '////', // 获取二维码所需要保存的信息
-        data
-    })
-}
+
 
