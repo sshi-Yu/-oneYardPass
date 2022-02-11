@@ -1,7 +1,7 @@
 <template>
   <div id="header">
     <!-- <van-nav-bar :title="headerDescription" left-text="返回" left-arrow @click.native="returnLastPage"> -->
-    <van-nav-bar :title="headerDescription" @click.native="returnLastPage">
+    <van-nav-bar :title="headerDescription">
       <template #right>
         <van-icon name="search" size="18" />
       </template>
@@ -19,11 +19,6 @@ export default {
       return {
         headerDescription: ''
       }
-    },
-    methods: {
-     /*  returnLastPage(){
-        this.$router.go(-1);
-      } */
     },
     components: { 
         [NavBar.name]: NavBar,

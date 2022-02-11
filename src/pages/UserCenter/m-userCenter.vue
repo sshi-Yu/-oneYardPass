@@ -4,10 +4,10 @@
       <img src="@/assets/avatar.png" alt="加载失败" />
     </div>
     <div class="operate">
-      <van-cell title="完善信息"> <van-icon name="arrow" /> </van-cell
-      ><van-cell title="退出登录">
-        <van-icon name="arrow" />
+      <van-cell title="完善信息" @click="toCompleteInformation"
+        ><van-icon name="arrow" />
       </van-cell>
+      <van-cell title="退出登录"><van-icon name="arrow" /> </van-cell>
     </div>
   </div>
 </template>
@@ -26,6 +26,11 @@ export default {
   mounted() {
     // 设置header提示
     this.$bus.$emit("SET_headerDescription", "个人中心");
+  },
+  methods: {
+    toCompleteInformation() {
+      this.$router.replace({ name: "m-complete" });
+    },
   },
 };
 </script>

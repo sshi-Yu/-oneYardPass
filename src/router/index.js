@@ -52,7 +52,12 @@ const router = new Router({
                     name: 'm-userCenter',
                     component: () => import('@/pages/UserCenter/m-userCenter'),
                     path: 'm-userCenter'
-                }
+                },
+                {
+                    name: 'm-complete',
+                    component: () => import('@/pages/Complete/m-complete'),
+                    path: 'm-complete'
+                },
             ]
         },
     ],

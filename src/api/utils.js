@@ -8,5 +8,11 @@ export function phoneVCode(data){
     })
 }
 
-
+export function submit_driverForm(data){
+    return Request({
+        method: 'post',
+        url: '/driver/append',
+        data
+    })
+}
 

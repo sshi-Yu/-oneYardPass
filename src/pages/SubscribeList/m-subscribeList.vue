@@ -73,7 +73,7 @@ export default {
       switch (subscribe_status) {
         case "0":
           return {
-            color: 'yellow',
+            color: 'yellowgreen',
             fontWeight: '700'
           };
         case "1":
