@@ -88,22 +88,22 @@ export default {
     async onSubmit(values) { // 提交注册
     console.log(values)
       const config = {
-        userAccount: values.userAccount,
-        userPassword: values.verifyPassword,
-        code: values.msgCode
+        user_account: values.userAccount,
+        user_password: values.verifyPassword,
+        // code: values.msgCode
       };
-      const resCode = await this.$store.dispatch("user/regist", config);
-      if (resCode == 1) {
+      const res = await this.$store.dispatch("user/regist", config);
+      if (res.code === '1111') {
         // 注册成功
         Toast("注册成功");
         this.$router.replace(`${this.$store.getters.equipment}-regist`);
-      } else if (resCode == 40120) {
+      } else if (res.code === '0010') {
         // 重复注册
         Toast.fail("该账号已注册，请勿重复注册");
-      }else if(resCode == 10100){
+      }else if(res.code === 10100){
         Toast.fail('验证码无效')
       } else {
-        Toast()
+        Toast(res.data)
       }
     },
     async toSendCode() { // 发送验证码

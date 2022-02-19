@@ -126,7 +126,7 @@ export default {
         alert(res.data);
       }
     } catch (err) { // 发生错误 展示占位图
-      alert('ERROR')
+      alert('ERROR', err)
     }
   },
 };

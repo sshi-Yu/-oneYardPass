@@ -22,3 +22,8 @@ export function setUserId(userId){
 export function getUserId(){
     return Cookie.get(user_id)
 }
+
+export function removeLoginToken(){
+    Cookie.remove(accessTokenKey, { path: '' })
+    Cookie.remove(user_id, { path: '' })
+}

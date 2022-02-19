@@ -67,8 +67,9 @@ export default {
       if (responseCode === '1111') {
         Toast.success("登陆成功");
         setTimeout(()=>{ // 登陆成功 跳转主页
+        location.reload();// 刷新数据
           this.$router.replace(`/${this.$store.getters.equipment}-main/${this.$store.getters.equipment}-subscribe`)
-        })
+        }, 1000)
       } else if (responseCode == '0002') {
         Toast.fail("账号格式有误");
       } else if (responseCode == '0003') {

@@ -7,21 +7,24 @@
       <van-cell title="完善信息" @click="toCompleteInformation"
         ><van-icon name="arrow" />
       </van-cell>
-      <van-cell title="退出登录"><van-icon name="arrow" /> </van-cell>
+      <van-cell title="退出登录" @click="toLogout"><van-icon name="arrow" /> </van-cell>
     </div>
   </div>
 </template>
 
 <script>
-import { Cell, Icon } from "vant";
+import { removeLoginToken } from '@/utils/auth'
+import { Cell, Icon, Toast } from "vant";
 import "vant/lib/cell/style";
 import "vant/lib/icon/style";
+import "vant/lib/toast/style";
 
 export default {
   name: "m-userCenter",
   components: {
     [Cell.name]: Cell,
     [Icon.name]: Icon,
+    [Toast.name]: Toast,
   },
   mounted() {
     // 设置header提示
@@ -31,6 +34,11 @@ export default {
     toCompleteInformation() {
       this.$router.replace({ name: "m-complete" });
     },
+    toLogout(){
+      removeLoginToken()
+      Toast('已退出登录')
+      location.reload() // 刷新页面
+    }
   },
 };
 </script>

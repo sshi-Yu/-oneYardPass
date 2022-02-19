@@ -60,6 +60,22 @@ const router = new Router({
                 },
             ]
         },
+        {
+            name: 'admin-login',
+            component: () => import('@/pages/Admin/Login'),
+            path: '/admin-login'
+        },
+        {
+            name: 'admin',
+            component: () => import('@/pages/Admin/Audit'),
+            path: '/admin',
+            children: [
+                {
+                    component: () => import('@/pages/Admin/Audit/PendingList'),
+                    path: 'pending'
+                }
+            ]
+        },
     ],
 
 })

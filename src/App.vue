@@ -45,7 +45,8 @@ export default {
         // ... 未完成
       } else {
         // 无token
-        this.$router.replace("/pc-login"); // token验证不通过 重定向到 pc-login
+        // this.$router.replace("/pc-login"); // token验证不通过 重定向到 pc-login
+        this.$router.replace("/admin-login"); // token验证不通过 重定向到 pc-login
       }
     }
   },
