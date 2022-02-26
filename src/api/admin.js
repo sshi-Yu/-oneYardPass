@@ -11,7 +11,15 @@ export function admin_login(data) {
 export function get_auditList(data) {
     return Request({
         method: 'get',
-        url: '/admin/getAuditList',
+        url: '/admin/pendingList',
         params: data
+    })
+}
+
+export function refresh_adminInfo(data){
+    return Request({
+        method: 'post',
+        url: '/admin/refresh',
+        data
     })
 }

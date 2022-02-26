@@ -1,5 +1,6 @@
 import {
-    admin_login
+    admin_login,
+    refresh_adminInfo
 } from '@/api/admin'
 import {
     getAccessToken,
@@ -9,7 +10,7 @@ import {
 
 
 const state = {
-    token: getAccessToken(),
+    token: getAccessToken() || '',
     auth: [],
     adminInfo: {},
 }
@@ -38,6 +39,15 @@ const actions = {
                 })
         })
     },
+    ref_adminInfo(_, data){
+        return new Promise((resolve, reject) => {
+            refresh_adminInfo(data)
+            .then(response => {
+                resolve(response)
+            })
+            .catch(error => reject(error))
+        })
+    }
 }
 
 const mutations = {

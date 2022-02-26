@@ -42,11 +42,26 @@ export default {
       this.$store.commit("user/SET_equipment", "PC");
       if (getAccessToken("At")) {
         // 发送token验证 未通过则重新定向到 pc 登录界面
-        // ... 未完成
+        if (getUserId()) {
+          // 有userId
+          const refresh_res = await this.$store.dispatch(
+            "admin/ref_adminInfo", {
+              admin_id: getUserId()
+            }
+          );
+          if (refresh_res.code === "1111") {// 验证成功 设置adminInfo
+            this.$store.commit('admin/SET_adminInfo', refresh_res.data.adminInfo)
+            this.$router.replace("/admin/pending");
+          } else {// 失败 重定向到登录页
+            this.$router.replace("/admin-login");
+          }
+        } else {
+          // 无userId
+          this.$router.replace("/admin-login"); // token验证不通过 重定向到 admin-login
+        }
       } else {
         // 无token
-        // this.$router.replace("/pc-login"); // token验证不通过 重定向到 pc-login
-        this.$router.replace("/admin-login"); // token验证不通过 重定向到 pc-login
+        this.$router.replace("/admin-login"); // token验证不通过 重定向到 admin-login
       }
     }
   },
