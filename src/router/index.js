@@ -73,6 +73,10 @@ const router = new Router({
                 {
                     component: () => import('@/pages/Admin/Audit/PendingList'),
                     path: 'pending'
+                },
+                {
+                    component: () => import('@/pages/Admin/Audit/DoneList'),
+                    path: 'done'
                 }
             ]
         },

@@ -15,4 +15,7 @@ export default {
 </script>
 
 <style scoped>
+#audit{
+  margin: 0 20px;
+}
 </style>

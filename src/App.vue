@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { getAccessToken, getUserId,  } from "@/utils/auth";
+import { getAccessToken, getAdminId, getUserId  } from "@/utils/auth";
 
 export default {
   name: "APP",
@@ -42,11 +42,11 @@ export default {
       this.$store.commit("user/SET_equipment", "PC");
       if (getAccessToken("At")) {
         // 发送token验证 未通过则重新定向到 pc 登录界面
-        if (getUserId()) {
+        if (getAdminId()) {
           // 有userId
           const refresh_res = await this.$store.dispatch(
             "admin/ref_adminInfo", {
-              admin_id: getUserId()
+              admin_id: getAdminId()
             }
           );
           if (refresh_res.code === "1111") {// 验证成功 设置adminInfo

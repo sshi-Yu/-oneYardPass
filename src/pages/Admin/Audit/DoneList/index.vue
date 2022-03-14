@@ -9,13 +9,12 @@
       <a-popconfirm
         slot="action"
         slot-scope="record"
-        title="Whether the audit is passed？"
-        ok-text="Pass"
-        cancel-text="Reject"
+        title="Whether to delete the reservation information？"
+        ok-text="Delete"
+        cancel-text="Cancel"
         @confirm="audit_pass(record.id)"
-        @cancel="audit_reject(record.id)"
       >
-        <a href="#">Audit</a>
+        <a href="#">DELETE</a>
       </a-popconfirm>
       <a-table
         slot="expandedRowRender"
@@ -26,35 +25,12 @@
       >
       </a-table>
     </a-table>
-    <!-- 弹出备注框 -->
-    <div>
-      <a-modal v-model="visible" title="Remark" on-ok="handleOk">
-        <template slot="footer">
-          <a-button key="back" @click="handleCancel"> Cancel </a-button>
-          <a-button
-            key="submit"
-            type="primary"
-            :loading="loading"
-            @click="handleOk"
-          >
-            Submit
-          </a-button>
-        </template>
-        <p>Please fill in the reason for rejection</p>
-        <a-textarea
-          v-model="value"
-          placeholder="Please fill in the reason for rejection"
-          :auto-size="{ minRows: 3, maxRows: 5 }"
-        />
-      </a-modal>
-    </div>
   </div>
 </template>
 
 <script>
 import { nanoid } from "nanoid";
 import moment from "moment";
-import { reject, approve } from "@/api/admin";
 const columns = [
   { title: "申请人", dataIndex: "userName", key: "userName" },
   { title: "司机", dataIndex: "driver", key: "driver" },
@@ -86,7 +62,7 @@ const innerColumns = [
   { title: "状态", dataIndex: "status", key: "status" },
 ];
 
-import { get_pendingList } from "@/api/admin";
+import { get_doneList, delete_subscribeItem } from "@/api/admin";
 export default {
   name: "Audit_List",
   data() {
@@ -94,49 +70,23 @@ export default {
       colData: [],
       columns,
       innerColumns,
-      loading: false, // 备注框提交加载动画
-      visible: false, // 备注框是否可见
-      value: "", // 备注框内容
-      beCheckedItemId: "", // 当前操作的item的id
     };
   },
   methods: {
     async audit_pass(id) {
       //审核通过回调
-      this.beCheckedItemId = id;
-      const res = await approve({// 发起通过申请的请求
-        subscribe_id: this.beCheckedItemId, // 当前操作的item的id
+      const res = await delete_subscribeItem({
+        subscribe_id: id,
       });
       if (res.code === "1111") {
         this.$message.success(res.data.msg);
-      }
-    },
-    audit_reject(id) {
-      //审核不通过回调 展示备注框
-      this.beCheckedItemId = id;
-      this.showModal(id);
-    },
-    showModal() {
-      this.visible = true;
-    },
-    async handleOk() {
-      this.loading = true;
-      const res = await reject({// 发起驳回申请的请求
-        subscribe_id: this.beCheckedItemId, // 当前操作的item的id
-        remark: this.value, //备注内容
-      });
-      if (res.code === "1111") {
+      } else {
         this.$message.success(res.data.msg);
-        this.loading = false;
-        this.visible = false;
       }
-    },
-    handleCancel() {
-      this.visible = false;
     },
   },
   async mounted() {
-    const res = await get_pendingList({
+    const res = await get_doneList({
       admin_id: this.$store.getters.adminInfo.admin_id,
     });
     if (res.code === "1111" && res.data.data instanceof Array) {
@@ -158,6 +108,12 @@ export default {
               transboundary_type:
                 i.transboundary_type === "0" ? "入境" : "出境", //根据状态码 显示出入境类型
               begin_time: i.begin_time,
+              status:
+                i.subscribe_status === "2"
+                  ? "预约失败"
+                  : i.subscribe_status === "3"
+                  ? "预约成功"
+                  : "预约撤回",
               end_time: i.end_time,
               goods_weight: i.goods_weight,
               goods_type: this.$options.filters.goods_type_filter(i.goods_type), //根据状态码 显示货物类型
@@ -185,9 +141,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.ant-table-row-level-1 {
-  display: none !important;
-}
-</style>

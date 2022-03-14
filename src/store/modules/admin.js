@@ -5,7 +5,7 @@ import {
 import {
     getAccessToken,
     setToken,
-    setUserId,
+    setAdminId,
 } from "@/utils/auth";
 
 
@@ -27,8 +27,8 @@ const actions = {
                         commit('SET_token', response.data.accessToken)
                         /* commit => set userInfo */
                         commit('SET_adminInfo', response.data.adminInfo)
-                        /* cookie保存userid 用于刷新后配合token重新获取用户身份信息 */
-                        setUserId(response.data.adminInfo.admin_id)
+                        /* cookie保存adminid 用于刷新后配合token重新获取用户身份信息 */
+                        setAdminId(response.data.adminInfo.admin_id)
                         resolve(response.code) // 传递code 登录页面提示成功
                     } else {
                         resolve(response.code) // 传递code 登录页面提示 内容
