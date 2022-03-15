@@ -1,3 +1,4 @@
+const path = require('path')
 module.exports = {
     lintOnSave: false,
     publicPath: process.env.INTEGRATE_MODE === 'YES' ?
@@ -18,5 +19,17 @@ module.exports = {
                 }
             }
         }
-    }
+    },
+    outputDir: 'docs',
+    assetsDir: 'static',
+    indexPath: 'index.html',
+    /* build: {
+        // Template for index.html
+        index: path.resolve(__dirname, '../docs/index.html'), //之前是'../dist/index.html'
+
+        // Paths
+        assetsRoot: path.resolve(__dirname, '../docs'), // 之前是 '../dist'
+        assetsSubDirectory: 'static',
+        assetsPublicPath: './', // 之前是 '/'
+    } */
 }
