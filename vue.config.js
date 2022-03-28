@@ -5,8 +5,8 @@ module.exports = {
         process.env.VUE_APP_BASE_API : '/',
     devServer: {
         open: process.env.NODE_ENV === 'development',
-        host: 'localhost',
-        port: '8081',
+        // host: 'localhost',
+        // port: '8081',
         proxy: {
             [process.env.VUE_APP_BASE_API]: {
                 // target: 'http://1.12.250.180:8089',
